@@ -17,6 +17,7 @@ on:
     inputs:
       message:
         default: production
+  workflow_dispatch:
 
 
 jobs:
