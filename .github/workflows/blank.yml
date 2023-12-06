@@ -8,7 +8,7 @@ env:
   DBMuserName: "poc@dbmaestro.com"
   DBMauthToken: "7KI5tL3ywYAZLB8FUY9fzJyekemgtG45"
   DBMserver: "DOPX-BERKE"
-  DBMVersion: "V1"
+  DBMVersion: "V9"
   DBMRSSchema: "demors"
   PACKAGE: test
 
