@@ -88,35 +88,7 @@ jobs:
                         Write-Host "Moved and renamed: $($file.FullName) to $($newPath)"
                     }
                 }
-                 elseif ($extension -eq 'sql') {
-                    if ($file.Directory.Name -eq 'APPS') {
-                        $newName = "03_" + $file.BaseName + ".sql"
-                        $newPath = Join-Path $targetDirectory1 $newName
-                        Copy-Item -Path $file.FullName -Destination $newPath -Force
-                        Write-Host "Moved and renamed: $($file.FullName) to $($newPath)"
-                    } elseif ($file.Directory.Name -eq 'TCMS') {
-                        $newName = "03_" + $file.BaseName + ".sql"
-                        $newPath = Join-Path $targetDirectory2 $newName
-                        Copy-Item -Path $file.FullName -Destination $newPath -Force
-                        Write-Host "Moved and renamed: $($file.FullName) to $($newPath)"
-                    }
-                }
-               elseif ($extension -eq 'pkb') {
-                    if ($file.Directory.Name -eq 'APPS') {
-                        $newName = "04_" + $file.BaseName + ".sql"
-                        $newPath = Join-Path $targetDirectory1 $newName
-                        Copy-Item -Path $file.FullName -Destination $newPath -Force
-                        Write-Host "Moved and renamed: $($file.FullName) to $($newPath)"
-                    } elseif ($file.Directory.Name -eq 'TCMS') {
-                        $newName = "04_" + $file.BaseName + ".sql"
-                        $newPath = Join-Path $targetDirectory2 $newName
-                        Copy-Item -Path $file.FullName -Destination $newPath -Force
-                        Write-Host "Moved and renamed: $($file.FullName) to $($newPath)"
-                    }
-                }
-            else {
-                        Write-Host "Skipped: $($file.FullName)"
-                    }
+
                 
             }
 
