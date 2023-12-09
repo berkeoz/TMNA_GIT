@@ -46,8 +46,8 @@ jobs:
           echo "Current build number: ${{ github.run_number }}"
           powershell("""
                             # Example PowerShell script
-                            \$packageName = "${{ env.DBMVersion }}"
-                            Write-Host "Running PowerShell script for package: \$packageName"
+                            
+                            Write-Host "Running PowerShell script for package: ${{ env.DBMVersion }}"
                             # Add your PowerShell commands here
                             
                             # Add your additional PowerShell commands here
