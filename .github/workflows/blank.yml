@@ -36,7 +36,7 @@ jobs:
 
       - name: Download files and process
         run: |
-          cd C:\\workspace\\tango_git\\download
+          cd C:\\workspace\\tmna_git\\download
           whoami
           dir
           git fetch
@@ -44,6 +44,89 @@ jobs:
           git checkout ${{ matrix.branch_name }}
 
           echo "Current build number: ${{ github.run_number }}"
+                    powershell |
+            # Example PowerShell script
+            $packageName = "${{ matrix.package_name }}"
+            Write-Host "Running PowerShell script for package: $packageName"
+            # Add your PowerShell commands here
+
+            # Add your additional PowerShell commands here
+          powershell |
+            # Example PowerShell script for downloading and processing files
+            $sourceDirectory = "C:\\workspace\\tmna_git\\download"
+            $targetDirectory1 = "C:\\workspace\\tmna_git\\packages\\V_${{ github.run_number }}\\TANGO_CLIENT1_PROD_APPS\\Upgrade"
+            $targetDirectory2 = "C:\\workspace\\tmna_git\\packages\\V_${{ github.run_number }}\\TANGO_CLIENT1_PROD_TMCS\\Upgrade"
+
+            Get-ChildItem -File -Recurse $sourceDirectory | ForEach-Object {
+                $file = $_
+                $extension = $file.Extension.TrimStart('.')
+
+                Write-Host "File Name: $($file.Name)"
+
+                if ($extension -eq 'trg') {
+                    if ($file.Directory.Name -eq 'APPS') {
+                        $newName = "01_" + $file.BaseName + ".sql"
+                        $newPath = Join-Path $targetDirectory1 $newName
+                        Copy-Item -Path $file.FullName -Destination $newPath -Force
+                        Write-Host "Moved and renamed: $($file.FullName) to $($newPath)"
+                    } elseif ($file.Directory.Name -eq 'TCMS') {
+                        $newName = "01_" + $file.BaseName + ".sql"
+                        $newPath = Join-Path $targetDirectory2 $newName
+                        Copy-Item -Path $file.FullName -Destination $newPath -Force
+                        Write-Host "Moved and renamed: $($file.FullName) to $($newPath)"
+                    }
+                } elseif ($extension -eq 'vw') {
+                    if ($file.Directory.Name -eq 'APPS') {
+                        $newName = "02_" + $file.BaseName + ".sql"
+                        $newPath = Join-Path $targetDirectory1 $newName
+                        Copy-Item -Path $file.FullName -Destination $newPath -Force
+                        Write-Host "Moved and renamed: $($file.FullName) to $($newPath)"
+                    } elseif ($file.Directory.Name -eq 'TCMS') {
+                        $newName = "02_" + $file.BaseName + ".sql"
+                        $newPath = Join-Path $targetDirectory2 $newName
+                        Copy-Item -Path $file.FullName -Destination $newPath -Force
+                        Write-Host "Moved and renamed: $($file.FullName) to $($newPath)"
+                    }
+                }
+                 elseif ($extension -eq 'sql') {
+                    if ($file.Directory.Name -eq 'APPS') {
+                        $newName = "03_" + $file.BaseName + ".sql"
+                        $newPath = Join-Path $targetDirectory1 $newName
+                        Copy-Item -Path $file.FullName -Destination $newPath -Force
+                        Write-Host "Moved and renamed: $($file.FullName) to $($newPath)"
+                    } elseif ($file.Directory.Name -eq 'TCMS') {
+                        $newName = "03_" + $file.BaseName + ".sql"
+                        $newPath = Join-Path $targetDirectory2 $newName
+                        Copy-Item -Path $file.FullName -Destination $newPath -Force
+                        Write-Host "Moved and renamed: $($file.FullName) to $($newPath)"
+                    }
+                }
+               elseif ($extension -eq 'pkb') {
+                    if ($file.Directory.Name -eq 'APPS') {
+                        $newName = "04_" + $file.BaseName + ".sql"
+                        $newPath = Join-Path $targetDirectory1 $newName
+                        Copy-Item -Path $file.FullName -Destination $newPath -Force
+                        Write-Host "Moved and renamed: $($file.FullName) to $($newPath)"
+                    } elseif ($file.Directory.Name -eq 'TCMS') {
+                        $newName = "04_" + $file.BaseName + ".sql"
+                        $newPath = Join-Path $targetDirectory2 $newName
+                        Copy-Item -Path $file.FullName -Destination $newPath -Force
+                        Write-Host "Moved and renamed: $($file.FullName) to $($newPath)"
+                    }
+                }
+            else {
+                        Write-Host "Skipped: $($file.FullName)"
+                    }
+                
+            }
+
+      - name: Compress package
+        run: |
+          java -jar "${{ env.agent_full_path }}" -CreateManifestFile -PathToScriptsFolder "C:\\workspace\\tmna_git\\packages\\V_${{ github.run_number }}"
+
+          # Zip everything under the specified folder
+          Compress-Archive -Path "C:\\workspace\\tmna_git\\packages\\V_${{ github.run_number }}\\*" -DestinationPath "C:\\workspace\\tmna_git\\packages\\V_${{ github.run_number }}.zip" -Force
+
 
 
       - name: DBMaestro Task
