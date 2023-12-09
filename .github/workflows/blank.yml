@@ -57,40 +57,7 @@ jobs:
             $targetDirectory1 = "C:\\workspace\\tmna_git\\packages\\V_${{ github.run_number }}\\TANGO_CLIENT1_PROD_APPS\\Upgrade"
             $targetDirectory2 = "C:\\workspace\\tmna_git\\packages\\V_${{ github.run_number }}\\TANGO_CLIENT1_PROD_TMCS\\Upgrade"
 
-            Get-ChildItem -File -Recurse $sourceDirectory | ForEach-Object {
-                $file = $_
-                $extension = $file.Extension.TrimStart('.')
 
-                Write-Host "File Name: $($file.Name)"
-
-                if ($extension -eq 'trg') {
-                    if ($file.Directory.Name -eq 'APPS') {
-                        $newName = "01_" + $file.BaseName + ".sql"
-                        $newPath = Join-Path $targetDirectory1 $newName
-                        Copy-Item -Path $file.FullName -Destination $newPath -Force
-                        Write-Host "Moved and renamed: $($file.FullName) to $($newPath)"
-                    } elseif ($file.Directory.Name -eq 'TCMS') {
-                        $newName = "01_" + $file.BaseName + ".sql"
-                        $newPath = Join-Path $targetDirectory2 $newName
-                        Copy-Item -Path $file.FullName -Destination $newPath -Force
-                        Write-Host "Moved and renamed: $($file.FullName) to $($newPath)"
-                    }
-                } elseif ($extension -eq 'vw') {
-                    if ($file.Directory.Name -eq 'APPS') {
-                        $newName = "02_" + $file.BaseName + ".sql"
-                        $newPath = Join-Path $targetDirectory1 $newName
-                        Copy-Item -Path $file.FullName -Destination $newPath -Force
-                        Write-Host "Moved and renamed: $($file.FullName) to $($newPath)"
-                    } elseif ($file.Directory.Name -eq 'TCMS') {
-                        $newName = "02_" + $file.BaseName + ".sql"
-                        $newPath = Join-Path $targetDirectory2 $newName
-                        Copy-Item -Path $file.FullName -Destination $newPath -Force
-                        Write-Host "Moved and renamed: $($file.FullName) to $($newPath)"
-                    }
-                }
-
-                
-            }
 
       - name: Compress package
         run: |
