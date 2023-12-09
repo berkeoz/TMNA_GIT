@@ -44,14 +44,14 @@ jobs:
           git checkout ${{ matrix.branch_name }}
 
           echo "Current build number: ${{ github.run_number }}"
-          powershell("""
-                            # Example PowerShell script
-                            
-                            Write-Host "Running PowerShell script for package: ${{ env.DBMVersion }}"
-                            # Add your PowerShell commands here
-                            
-                            # Add your additional PowerShell commands here
-                            """)
+      - name: Run PowerShell Script
+        shell: pwsh
+        run: |
+          # Your PowerShell script goes here
+          Write-Host "Hello from PowerShell script!"
+          Get-ChildItem -Path .\ -Recurse | ForEach-Object {
+              Write-Host "File: $($_.FullName)"
+          }
 
 
       - name: Compress package
