@@ -45,16 +45,6 @@ jobs:
           git checkout ${{ env.branch_name }}
 
           echo "Current build number: ${{ github.run_number }}"
-      - name: Run PowerShell Script
-        shell: pwsh
-        run: |
-          # Your PowerShell script goes here
-
-            # Example PowerShell script for downloading and processing files
-            $sourceDirectory = "C:\\workspace\\tmna_git\\download"
-            $targetDirectory1 = "C:\\workspace\\tmna_git\\packages\\V_${{ github.run_number }}\\TOYOTA_RS\\Upgrade"
-            
-
 
 
 
