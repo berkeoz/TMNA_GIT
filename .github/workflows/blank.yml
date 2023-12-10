@@ -59,11 +59,17 @@ jobs:
           mkdir "V_${{ github.run_number }}\\TOYOTA_RS"
           mkdir "V_${{ github.run_number }}\\TOYOTA_RS\\Upgrade"
           mkdir "V_${{ github.run_number }}\\TOYOTA_RS\\Downgrade"
-
+          
+      - name: Run PowerShell Script
+        shell: pwsh
+        run: |
+           $destinationDirectory = "C:\\workspace\\tango_git\\packages\\V_${{github.run_number}}"
+           $targetDirectory1 = "${destinationDirectory}\\TANGO_CLIENT1_PROD_APPS\\Upgrade"   
+           Write-Host "File: $targetDirectory1  $destinationDirectory  "
           
       - name: Compress package
         run: |
-          java -jar "${{ env.agent_full_path }}" -CreateManifestFile -PathToScriptsFolder "C:\\workspace\\tmna_git\\packages\\V_${{ github.run_number }}"
+          java -jar "${{ env.jarPath }}" -CreateManifestFile -PathToScriptsFolder "C:\\workspace\\tmna_git\\packages\\V_${{ github.run_number }}"
           # Zip everything under the specified folder
           Compress-Archive -Path "C:\\workspace\\tmna_git\\packages\\V_${{ github.run_number }}\\*" -DestinationPath "C:\\workspace\\tmna_git\\packages\\V_${{ github.run_number }}.zip" -Force
       - name: DBMaestro Task
