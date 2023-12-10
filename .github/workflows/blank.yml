@@ -48,9 +48,77 @@ jobs:
         shell: pwsh
         run: |
           # Your PowerShell script goes here
-          Write-Host "Hello from PowerShell script!"
-          Get-ChildItem -Path .\ -Recurse | ForEach-Object {
-              Write-Host "File: $($_.FullName)"
+
+            # Example PowerShell script for downloading and processing files
+            $sourceDirectory = "C:\\workspace\\tmna_git\\download"
+            $targetDirectory1 = "C:\\workspace\\tmna_git\\packages\\V_${{ github.run_number }}\\TOYOTA_RS\\Upgrade"
+            
+
+      - name: Download Files
+        run: |
+          cd C:\\workspace\\tmna_git\\packages
+          mkdir "V_${{ github.run_number }}"
+          mkdir "V_${{ github.run_number }}\\TOYOTA_RS"
+          mkdir "V_${{ github.run_number }}\\TOYOTA_RS\\Upgrade"
+          mkdir "V_${{ github.run_number }}\\TOYOTA_RS\\Downgrade"
+
+          
+          SET sourceDirectory=C:\\workspace\\tmna_git\\download
+          SET targetDirectory1="V_${{ github.run_number }}\\TOYOTA_RS\\Upgrade"
+          
+          SET packageName=${{ env.package_name }}
+          SET sourceDirectory=${{ env.sourceDirectory }}
+          echo Source Directory: %sourceDirectory%
+          
+          $sDirectory = "${{ env.sourceDirectory }}"
+          $t1Directory = "${{ env.targetDirectory1 }}"
+          
+          Write-Host "Running PowerShell script for package: $sDirectory"
+          Write-Host "Running PowerShell script for package: $t1Directory"
+          
+
+          Get-ChildItem -File -Recurse $sDirectory | ForEach-Object {
+              $file = $_
+              $extension = $file.Extension.TrimStart('.')
+              Write-Host "File Name: $($file.Name)"
+              if ($extension -eq 'trg') {
+                  if ($file.Directory.Name -eq 'APPS') {
+                      $newName = "01_" + $file.BaseName + ".sql"
+                      $newPath = Join-Path $t1Directory $newName
+                      Copy-Item -Path $file.FullName -Destination $newPath -Force
+                      Write-Host "Moved and renamed: $($file.FullName) to $($newPath)"
+                  } 
+              } elseif ($extension -eq 'vw') {
+                  if ($file.Directory.Name -eq 'APPS') {
+                      $newName = "02_" + $file.BaseName + ".sql"
+                      $newPath = Join-Path $t1Directory $newName
+                      Copy-Item -Path $file.FullName -Destination $newPath -Force
+                      Write-Host "Moved and renamed: $($file.FullName) to $($newPath)"
+                  }
+              } elseif ($extension -eq 'sql') {
+                  if ($file.Directory.Name -eq 'APPS') {
+                      $newName = "03_" + $file.BaseName + ".sql"
+                      $newPath = Join-Path $t1Directory $newName
+                      Copy-Item -Path $file.FullName -Destination $newPath -Force
+                      Write-Host "Moved and renamed: $($file.FullName) to $($newPath)"
+                  } 
+              } elseif ($extension -eq 'pks') {
+                  if ($file.Directory.Name -eq 'APPS') {
+                      $newName = "04_" + $file.BaseName + ".sql"
+                      $newPath = Join-Path $t1Directory $newName
+                      Copy-Item -Path $file.FullName -Destination $newPath -Force
+                      Write-Host "Moved and renamed: $($file.FullName) to $($newPath)"
+                  } 
+              } elseif ($extension -eq 'pkb') {
+                  if ($file.Directory.Name -eq 'APPS') {
+                      $newName = "05_" + $file.BaseName + ".sql"
+                      $newPath = Join-Path $t1Directory $newName
+                      Copy-Item -Path $file.FullName -Destination $newPath -Force
+                      Write-Host "Moved and renamed: $($file.FullName) to $($newPath)"
+                  }
+              } else {
+                  Write-Host "Skipped: $($file.FullName)"
+              }
           }
 
 
