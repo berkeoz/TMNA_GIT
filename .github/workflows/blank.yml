@@ -128,5 +128,9 @@ jobs:
           java -jar "${{ env.jarPath }}" -CreateManifestFile -PathToScriptsFolder "C:\\workspace\\tmna_git\\packages\\V_${{ github.run_number }}"
           # Zip everything under the specified folder
           Compress-Archive -Path "C:\\workspace\\tmna_git\\packages\\V_${{ github.run_number }}\\*" -DestinationPath "C:\\workspace\\tmna_git\\packages\\V_${{ github.run_number }}.zip" -Force
+          
+      - name: DBMaestro Packaging
+        run: java -jar "${{ env.jarPath }}" -Package -ProjectName ${{ env.DBMprojectName }} -IgnoreScriptWarnings True -FilePath "C:\\workspace\\tmna_git\\packages\\V_${{ github.run_number }}.zip"   -Server DOPX-BERKE:8020 -AuthType ${{ env.DBMauthType }} -UserName ${{ env.DBMuserName }} -Password ${{ env.DBMauthToken }}
+    
       - name: DBMaestro Task
         run: java -jar "${{ env.jarPath }}" -Upgrade -ProjectName ${{ env.DBMprojectName }} -EnvName "Release Source" -PackageName ${{ env.DBMVersion }} -Server DOPX-BERKE:8020 -AuthType ${{ env.DBMauthType }} -UserName ${{ env.DBMuserName }} -Password ${{ env.DBMauthToken }}
