@@ -63,9 +63,29 @@ jobs:
       - name: Run PowerShell Script
         shell: pwsh
         run: |
-           $destinationDirectory = "C:\\workspace\\tango_git\\packages\\V_${{github.run_number}}"
-           $targetDirectory1 = "${destinationDirectory}\\TANGO_CLIENT1_PROD_APPS\\Upgrade"   
+           $destinationDirectory = "C:\\workspace\\tmna_git\\packages\\V_${{github.run_number}}"
+           $targetDirectory1 = "${destinationDirectory}\\TOYOTA_RS\\Upgrade"   
            Write-Host "File: $targetDirectory1  $destinationDirectory  "
+           $sourceDirectory= "C:\\workspace\\tmna_git\\download"
+           Get-ChildItem -File -Recurse $sourceDirectory | ForEach-Object {
+                          $file = $_
+                          $extension = $file.Extension.TrimStart('.')
+                          Write-Host "File Name: $(\$file.Name)"
+                          if ($extension -eq 'trg') {
+                              if ($file.Directory.Name -eq 'APPS') {
+                                  $newName = "01_" + $file.BaseName + ".sql"
+                                  $newPath = Join-Path $targetDirectory1 \$newName
+                                  Copy-Item -Path $file.FullName -Destination $newPath -Force
+                                  Write-Host "Moved and renamed: $($file.FullName) to $($newPath)"
+                              } 
+                          } else {
+                              Write-Host "Skipped: $($file.FullName)"
+                          }
+                          }
+                                        
+
+
+        
           
       - name: Compress package
         run: |
