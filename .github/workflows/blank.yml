@@ -11,6 +11,7 @@ env:
   DBMVersion: "V9"
   DBMRSSchema: "demors"
   PACKAGE: test
+  BRANCH_NAME: "2023-11-30"
 
 
 
@@ -41,7 +42,7 @@ jobs:
           dir
           git fetch
           git status
-          git checkout ${{ matrix.branch_name }}
+          git checkout ${{ env.branch_name }}
 
           echo "Current build number: ${{ github.run_number }}"
       - name: Run PowerShell Script
@@ -65,54 +66,51 @@ jobs:
           
           SET sourceDirectory=C:\\workspace\\tmna_git\\download
           SET targetDirectory1="V_${{ github.run_number }}\\TOYOTA_RS\\Upgrade"
-          
-          SET packageName=${{ env.package_name }}
-          SET sourceDirectory=${{ env.sourceDirectory }}
+               
           echo Source Directory: %sourceDirectory%
           
-          $sDirectory = "${{ env.sourceDirectory }}"
-          $t1Directory = "${{ env.targetDirectory1 }}"
           
-          Write-Host "Running PowerShell script for package: $sDirectory"
-          Write-Host "Running PowerShell script for package: $t1Directory"
+          
+          Write-Host "Running PowerShell script for package: %sourceDirectory%"
+          Write-Host "Running PowerShell script for package: %targetDirectory1%"
           
 
-          Get-ChildItem -File -Recurse $sDirectory | ForEach-Object {
+          Get-ChildItem -File -Recurse %sourceDirectory% | ForEach-Object {
               $file = $_
               $extension = $file.Extension.TrimStart('.')
               Write-Host "File Name: $($file.Name)"
               if ($extension -eq 'trg') {
                   if ($file.Directory.Name -eq 'APPS') {
                       $newName = "01_" + $file.BaseName + ".sql"
-                      $newPath = Join-Path $t1Directory $newName
+                      $newPath = Join-Path %targetDirectory1% $newName
                       Copy-Item -Path $file.FullName -Destination $newPath -Force
                       Write-Host "Moved and renamed: $($file.FullName) to $($newPath)"
                   } 
               } elseif ($extension -eq 'vw') {
                   if ($file.Directory.Name -eq 'APPS') {
                       $newName = "02_" + $file.BaseName + ".sql"
-                      $newPath = Join-Path $t1Directory $newName
+                      $newPath = Join-Path %targetDirectory1% $newName
                       Copy-Item -Path $file.FullName -Destination $newPath -Force
                       Write-Host "Moved and renamed: $($file.FullName) to $($newPath)"
                   }
               } elseif ($extension -eq 'sql') {
                   if ($file.Directory.Name -eq 'APPS') {
                       $newName = "03_" + $file.BaseName + ".sql"
-                      $newPath = Join-Path $t1Directory $newName
+                      $newPath = Join-Path %targetDirectory1% $newName
                       Copy-Item -Path $file.FullName -Destination $newPath -Force
                       Write-Host "Moved and renamed: $($file.FullName) to $($newPath)"
                   } 
               } elseif ($extension -eq 'pks') {
                   if ($file.Directory.Name -eq 'APPS') {
                       $newName = "04_" + $file.BaseName + ".sql"
-                      $newPath = Join-Path $t1Directory $newName
+                      $newPath = Join-Path %targetDirectory1% $newName
                       Copy-Item -Path $file.FullName -Destination $newPath -Force
                       Write-Host "Moved and renamed: $($file.FullName) to $($newPath)"
                   } 
               } elseif ($extension -eq 'pkb') {
                   if ($file.Directory.Name -eq 'APPS') {
                       $newName = "05_" + $file.BaseName + ".sql"
-                      $newPath = Join-Path $t1Directory $newName
+                      $newPath = Join-Path %targetDirectory1% $newName
                       Copy-Item -Path $file.FullName -Destination $newPath -Force
                       Write-Host "Moved and renamed: $($file.FullName) to $($newPath)"
                   }
