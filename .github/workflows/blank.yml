@@ -11,7 +11,6 @@ env:
   DBMVersion: "V9"
   DBMRSSchema: "demors"
   PACKAGE: test
-  BRANCH_NAME: "2023-11-30"
 
 
 
@@ -42,20 +41,20 @@ jobs:
           dir
           git fetch
           git status
-          git checkout ${{ env.branch_name }}
-
+          git checkout ${{ matrix.branch_name }}
           echo "Current build number: ${{ github.run_number }}"
-
-
-
+      - name: Run PowerShell Script
+        shell: pwsh
+        run: |
+          # Your PowerShell script goes here
+          Write-Host "Hello from PowerShell script!"
+          Get-ChildItem -Path .\ -Recurse | ForEach-Object {
+              Write-Host "File: $($_.FullName)"
+          }
       - name: Compress package
         run: |
           java -jar "${{ env.agent_full_path }}" -CreateManifestFile -PathToScriptsFolder "C:\\workspace\\tmna_git\\packages\\V_${{ github.run_number }}"
-
           # Zip everything under the specified folder
           Compress-Archive -Path "C:\\workspace\\tmna_git\\packages\\V_${{ github.run_number }}\\*" -DestinationPath "C:\\workspace\\tmna_git\\packages\\V_${{ github.run_number }}.zip" -Force
-
-
-
       - name: DBMaestro Task
         run: java -jar "${{ env.jarPath }}" -Upgrade -ProjectName ${{ env.DBMprojectName }} -EnvName "Release Source" -PackageName ${{ env.DBMVersion }} -Server DOPX-BERKE:8020 -AuthType ${{ env.DBMauthType }} -UserName ${{ env.DBMuserName }} -Password ${{ env.DBMauthToken }}
